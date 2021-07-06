@@ -1,8 +1,9 @@
 #include "Rectangle.h"
 
+#ifdef LIB_WGLM
 #include <wglm/gtc/constants.hpp>
 
-#include "NumHelpers.h"
+#include "Misc.h"
 
 Rect::Rect(glm::vec2 b, glm::vec2 t) : bot(b), top(t) {
 }
@@ -341,3 +342,4 @@ glm::vec2 screenToNormal(glm::vec2 vec) {
 glm::vec2 normalToScreen(glm::vec2 vec) {
 	return (vec * 2.0f) - 1.0f;
 }
+#endif

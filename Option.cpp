@@ -1,5 +1,7 @@
 #include "Option.h"
 
+#ifdef LIB_MEM
+
 #include <mem/Global.h>
 
 #include <fstream>
@@ -83,3 +85,4 @@ namespace misc
 		return out.str();
 	}
 }
+#endif

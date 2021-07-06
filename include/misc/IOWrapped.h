@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef LIB_WGLM
 #include <wglm/glm.hpp>
 
 #include <istream>
@@ -76,3 +77,4 @@ inline std::istream& operator>>(std::istream& in, glm::ivec4& v) {
 	in >> v.x >> v.y >> v.z >> v.w;
 	return in;
 }
+#endif

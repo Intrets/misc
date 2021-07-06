@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef LIB_WGLM
+
 #include <wglm/glm.hpp>
 
 class ScreenRectangle;
@@ -134,3 +136,4 @@ glm::ivec2 screenToPixel(glm::vec2 vec, glm::ivec2 screenSize);
 glm::vec2 screenToNormal(glm::vec2 vec);
 glm::vec2 normalToScreen(glm::vec2 vec);
 
+#endif

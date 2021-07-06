@@ -10,24 +10,20 @@ make_module(
 	MODULE_NAME ${MODULE_NAME}
 	MODULE_FILES
 		Rectangle
-		NumHelpers
 		Misc
 		UpdatedCache
 		StringHelpers
 		Option
-		FunctionHelpers
 		IOWrapped
+		FunctionHelpers
 		PathManager
-		Enums
 		Log
 		Timer
 		PeriodAverage
 		CircularArray
 		Num
 	CXX_STANDARD 20
-	REQUIRED_LIBS
-		WGLM
+	OPTIONAL_LIBS
 		mem
-		render
+		WGLM
 )
-

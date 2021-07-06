@@ -1,6 +1,6 @@
 #pragma once
 
-#include <wglm/glm.hpp>
+#ifdef LIB_MEM
 
 #include <string>
 #include <iostream>
@@ -180,49 +180,5 @@ namespace misc
 	inline std::string OptionValue<T>::type() {
 		return "type info not implemented";
 	}
-
-	//template<>
-	//inline std::string OptionValue<int32_t>::type() {
-	//	return "int";
-	//}
-
-	//template<>
-	//inline std::string OptionValue<bool>::type() {
-	//	return "bool";
-	//}
-
-	//template<>
-	//inline std::string OptionValue<float>::type() {
-	//	return "float";
-	//}
-
-	//template<>
-	//inline std::string OptionValue<glm::vec2>::type() {
-	//	return "vec2";
-	//}
-
-	//template<>
-	//inline std::string OptionValue<glm::vec3>::type() {
-	//	return "vec3";
-	//}
-
-	//template<>
-	//inline std::string OptionValue<glm::vec4>::type() {
-	//	return "vec4";
-	//}
-
-	//template<>
-	//inline std::string OptionValue<glm::ivec2>::type() {
-	//	return "ivec2";
-	//}
-
-	//template<>
-	//inline std::string OptionValue<glm::ivec3>::type() {
-	//	return "ivec3";
-	//}
-
-	//template<>
-	//inline std::string OptionValue<glm::ivec4>::type() {
-	//	return "ivec4";
-	//}
 }
+#endif
