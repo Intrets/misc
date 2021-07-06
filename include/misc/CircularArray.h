@@ -13,7 +13,6 @@ namespace misc
 	public:
 		int32_t index;
 		int32_t size;
-		//double* arr;
 		std::vector<T> arr;
 		T total;
 

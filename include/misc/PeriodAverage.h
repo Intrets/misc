@@ -4,62 +4,49 @@
 
 namespace misc
 {
-	template<class T>
+	template<class Value, class Time, class Duration>
 	class PeriodAvarage
 	{
 	private:
-		T zero();
+		Value zero() {
+			return static_cast<Value>(0);
+		};
 
 	public:
-		CircularArray<T> history;
+		CircularArray<Value> history;
 
-		double currentTime;
-		T current;
-		int32_t measurements;
+		Time currentTime{};
+		Value current{};
+		int32_t measurements{};
 
-		double timePeriod;
+		Duration timePeriod{};
 
-		PeriodAvarage(int32_t historySize, double timePeriod_);
+		PeriodAvarage(int32_t historySize, Duration timePeriod_) :
+			history(historySize),
+			timePeriod(timePeriod_) {
+		};
+
 		PeriodAvarage() = default;
 		~PeriodAvarage() = default;
 
-		void insert(T val, double time);
-		T getAvarege(int32_t timePeriods);
-
-	};
-
-	template<class T>
-	inline T PeriodAvarage<T>::zero() {
-		return static_cast<T>(0);
-	}
-
-	template<class T>
-	inline PeriodAvarage<T>::PeriodAvarage(int32_t historySize, double timePeriod_) :
-		history(historySize),
-		currentTime(0.0),
-		current(this->zero()),
-		measurements(0),
-		timePeriod(timePeriod_) {
-	}
-
-	template<class T>
-	inline void PeriodAvarage<T>::insert(T val, double time) {
-		if (time - this->currentTime >= this->timePeriod) {
-			if (this->measurements != 0) {
-				this->history.insert(this->current / static_cast<T>(this->measurements));
+		void insert(Value value, Time time) {
+			if (time - this->currentTime >= this->timePeriod) {
+				if (this->measurements != 0) {
+					this->history.insert(this->current / this->measurements);
+				}
+				this->current = value;
+				this->currentTime = time;
+				this->measurements = 1;
 			}
-			this->current = val;
-			this->currentTime = time;
-			this->measurements = 1;
-		}
-		else {
-			this->current += val;
-			this->measurements++;
-		}
-	}
+			else {
+				this->current += value;
+				this->measurements++;
+			}
 
-	template<class T>
-	inline T PeriodAvarage<T>::getAvarege(int32_t timePeriods) {
-		return T(this->history.sumLast(timePeriods) / static_cast<T>(timePeriods));
-	}
+		};
+
+		Value getAvarege(int32_t timePeriods) {
+			return this->history.sumLast(timePeriods) / timePeriods;
+		};
+	};
 }

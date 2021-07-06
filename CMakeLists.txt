@@ -26,9 +26,7 @@ make_module(
 		Num
 	CXX_STANDARD 20
 	REQUIRED_LIBS
-		GLFW3
 		WGLM
-		GLEW
 		mem
 		render
 )

@@ -2,13 +2,17 @@
 
 #include <sstream>
 #include <iomanip>
-#include <chrono>
-
-//#include <GL/glew.h>
-//#include <GLFW/glfw3.h>
 
 namespace misc
 {
+	TimePoint getTime() {
+		return std::chrono::system_clock::now();
+	}
+
+	Duration getDurationSince(TimePoint point) {
+		return point - getTime();
+	}
+
 	void Timer::startTiming(std::string timingName) {
 		std::lock_guard<std::mutex> guard(this->mtx);
 
@@ -42,8 +46,8 @@ namespace misc
 		auto [it, b] = this->timings.insert({ timingName, Timing() });
 		auto& timing = it->second;
 		if (!b) {
-			//timing.history.insert(timing.timing, glfwGetTime());
-			timing.timing = Duration::zero();
+			timing.history.insert(timing.timing, getTime());
+			timing.timing = Duration(0);
 		}
 		timing.maybeStart = getTime();
 	}
