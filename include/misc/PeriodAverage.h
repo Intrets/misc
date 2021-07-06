@@ -60,6 +60,6 @@ namespace misc
 
 	template<class T>
 	inline T PeriodAvarage<T>::getAvarege(int32_t timePeriods) {
-		return this->history.sumLast(timePeriods) / static_cast<T>(timePeriods);
+		return T(this->history.sumLast(timePeriods) / static_cast<T>(timePeriods));
 	}
 }

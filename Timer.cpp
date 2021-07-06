@@ -2,9 +2,10 @@
 
 #include <sstream>
 #include <iomanip>
+#include <chrono>
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+//#include <GL/glew.h>
+//#include <GLFW/glfw3.h>
 
 namespace misc
 {
@@ -15,11 +16,11 @@ namespace misc
 		if (it == this->timings.end()) {
 			return;
 		}
-		it->second.maybeStart = glfwGetTime();
+		it->second.maybeStart = getTime();
 	}
 
 	void Timer::endTiming(std::string timingName) {
-		auto time = glfwGetTime();
+		auto time = getTime();
 
 		std::lock_guard<std::mutex> guard(this->mtx);
 
@@ -41,10 +42,10 @@ namespace misc
 		auto [it, b] = this->timings.insert({ timingName, Timing() });
 		auto& timing = it->second;
 		if (!b) {
-			timing.history.insert(timing.timing, glfwGetTime());
-			timing.timing = 0.0;
+			//timing.history.insert(timing.timing, glfwGetTime());
+			timing.timing = Duration::zero();
 		}
-		timing.maybeStart = glfwGetTime();
+		timing.maybeStart = getTime();
 	}
 
 	std::vector<std::string> Timer::print() {
@@ -58,13 +59,13 @@ namespace misc
 		}
 
 		for (auto& p : this->timings) {
-			double average = p.second.history.getAvarege(5);
+			Duration average = p.second.history.getAvarege(5);
 			std::string perSecond;
-			if (average <= 1e-5) {
+			if (average <= Duration(1e-5)) {
 				perSecond = "many";
 			}
 			else {
-				perSecond = std::to_string(static_cast<int32_t>(1.0 / average));
+				perSecond = std::to_string(static_cast<int32_t>(Duration(1.0) / average));
 			}
 			out << std::setw(pad) << p.first << ": " << std::setw(7) << average * 1000.0 << "ms | " << perSecond << "/s";
 			res.push_back(out.str());
