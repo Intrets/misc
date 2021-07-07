@@ -59,7 +59,7 @@ namespace misc
 
 		size_t pad = 0;
 		for (auto& p : this->timings) {
-			pad = glm::max(pad, p.first.size());
+			pad = std::max(pad, p.first.size());
 		}
 
 		for (auto& p : this->timings) {
