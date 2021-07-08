@@ -37,6 +37,10 @@ namespace misc
 		return this->paths[RESOURCE_PATH::GRAPHICS];
 	}
 
+	std::filesystem::path PathManager::getModelsPath() {
+		return this->paths[RESOURCE_PATH::MODELS];
+	}
+
 	PathManager::PathManager(std::string const& root_) {
 		std::filesystem::path root = root_;
 		this->paths[RESOURCE_PATH::CONFIG] = root / "config";
@@ -45,6 +49,7 @@ namespace misc
 		this->files[RESOURCE_FILE::OPTIONS] = root / "config" / "options.txt";
 		this->paths[RESOURCE_PATH::FONTS] = root / "graphics" / "fonts";
 		this->paths[RESOURCE_PATH::SOUNDS] = root / "sound";
+		this->paths[RESOURCE_PATH::MODELS] = root / "graphics" / "models";
 	}
 
 	PathManager::~PathManager() {
