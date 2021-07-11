@@ -71,7 +71,7 @@ namespace misc
 			else {
 				perSecond = std::to_string(static_cast<int32_t>(Duration(1.0) / average));
 			}
-			out << std::setw(pad) << p.first << ": " << std::setw(7) << average * 1000.0 << "ms | " << perSecond << "/s";
+			out << std::setw(pad) << p.first << ": " << std::setw(7) << average.count() * 1000.0 << "ms | " << perSecond << "/s";
 			res.push_back(out.str());
 			out.str(std::string());
 		}

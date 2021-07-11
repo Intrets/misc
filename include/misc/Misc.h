@@ -2,7 +2,10 @@
 
 #ifdef LIB_WGLM
 #include <wglm/glm.hpp>
+#include <wglm/gtx/quaternion.hpp>
 #endif
+
+#include <tepp/tepp.h>
 
 #include <utility>
 #include <vector>
@@ -17,6 +20,80 @@
 
 inline int32_t floordiv(int32_t x, int32_t y) {
 	return (x + (x < 0)) / y - (x < 0);
+}
+
+template<class To, class From>
+struct Convert;
+
+#ifdef LIB_WGLM
+template<class From>
+struct Convert<glm::vec3, From>
+{
+	using To = glm::vec3;
+
+	static inline To run(From const from) {
+		if constexpr (std::is_same_v<To, From>) {
+			return from;
+		}
+		else {
+			return glm::vec3(from.x, from.y, from.z);
+		}
+	}
+};
+
+template<class From>
+struct Convert<glm::quat, From>
+{
+	using To = glm::quat;
+
+	static inline To run(From const from) {
+		if constexpr (std::is_same_v<To, From>) {
+			return from;
+		}
+		else {
+			return { from.w, from.x, from.y, from.z };
+		}
+	}
+};
+
+template<class From>
+struct Convert<glm::vec4, From>
+{
+	using To = glm::vec4;
+
+	static inline To run(From const from) {
+		if constexpr (std::is_same_v<To, From>) {
+			return from;
+		}
+		else {
+			return { from.x, from.y, from.z,  from.w };
+		}
+	}
+};
+
+template<class To, class From>
+requires std::is_same_v<To, glm::mat4>
+struct Convert<To, From>
+{
+	static inline To run(From const from) {
+		if constexpr (std::is_same_v<To, From>) {
+			return from;
+		}
+		else {
+			return {
+				convert<glm::vec4>(from.column0),
+				convert<glm::vec4>(from.column1),
+				convert<glm::vec4>(from.column2),
+				convert<glm::vec4>(from.column3),
+			};
+		}
+	}
+};
+#endif
+
+template<class To, class From>
+inline To convert(From const from) {
+	return Convert<To, From>::run(from);
 }
 
 #ifdef LIB_WGLM
