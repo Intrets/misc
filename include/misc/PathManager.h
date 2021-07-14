@@ -20,6 +20,7 @@ namespace misc
 	{
 		CONFIG,
 		GRAPHICS,
+		SHADERS,
 		MODELS,
 		SAVE,
 		FONTS,
@@ -46,6 +47,7 @@ namespace misc
 		std::filesystem::path getFontsPath();
 		std::filesystem::path getTexturesPath();
 		std::filesystem::path getModelsPath();
+		std::filesystem::path getShadersPath();
 
 		PathManager(std::string const& root);
 		~PathManager();

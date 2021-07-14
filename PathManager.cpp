@@ -41,6 +41,10 @@ namespace misc
 		return this->paths[RESOURCE_PATH::MODELS];
 	}
 
+	std::filesystem::path PathManager::getShadersPath() {
+		return this->paths[RESOURCE_PATH::SHADERS];
+	}
+
 	PathManager::PathManager(std::string const& root_) {
 		std::filesystem::path root = root_;
 		this->paths[RESOURCE_PATH::CONFIG] = root / "config";
@@ -50,6 +54,7 @@ namespace misc
 		this->paths[RESOURCE_PATH::FONTS] = root / "graphics" / "fonts";
 		this->paths[RESOURCE_PATH::SOUNDS] = root / "sound";
 		this->paths[RESOURCE_PATH::MODELS] = root / "graphics" / "models";
+		this->paths[RESOURCE_PATH::SHADERS] = root / "graphics" / "shaders";
 	}
 
 	PathManager::~PathManager() {
