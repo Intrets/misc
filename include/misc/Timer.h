@@ -2,6 +2,8 @@
 
 #include <mutex>
 #include <chrono>
+#include <unordered_map>
+#include <string>
 
 #include "PeriodAverage.h"
 #include "Option.h"

@@ -5,8 +5,6 @@
 #include <wglm/gtx/quaternion.hpp>
 #endif
 
-#include <tepp/tepp.h>
-
 #include <utility>
 #include <vector>
 #include <sstream>
