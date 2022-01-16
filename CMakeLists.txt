@@ -25,6 +25,7 @@ project(${MODULE_NAME} LANGUAGES CXX)
 make_module(
 	MODULE_NAME ${MODULE_NAME}
 	MODULE_FILES
+		Logger
 		Rectangle
 		Misc
 		UpdatedCache
@@ -39,7 +40,8 @@ make_module(
 		CircularArray
 		Num
 	CXX_STANDARD 20
-	OPTIONAL_LIBS
+	REQUIRED_LIBS
 		mem
+	OPTIONAL_LIBS
 		WGLM
 )
