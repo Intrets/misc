@@ -1,4 +1,4 @@
-// Crack-Synth - A modular software synth
+// misc - A C++ library with many bad things
 // Copyright (C) 2022  Intrets
 //
 // This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ struct WindowsPimpl : Logger::ColorPimpl
 				c = FOREGROUND_RED;
 				break;
 			case Logger::Color::yellow:
-				c = FOREGROUND_GREEN | FOREGROUND_BLUE;
+				c = FOREGROUND_GREEN | FOREGROUND_RED;
 				break;
 			case Logger::Color::green:
 				c = FOREGROUND_GREEN;

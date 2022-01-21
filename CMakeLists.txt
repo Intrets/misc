@@ -25,6 +25,7 @@ project(${MODULE_NAME} LANGUAGES CXX)
 make_module(
 	MODULE_NAME ${MODULE_NAME}
 	MODULE_FILES
+		Matrix3Transform
 		Logger
 		Rectangle
 		Misc

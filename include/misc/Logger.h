@@ -1,4 +1,4 @@
-// Crack-Synth - A modular software synth
+// misc - A C++ library with many bad things
 // Copyright (C) 2022  Intrets
 //
 // This program is free software: you can redistribute it and/or modify
