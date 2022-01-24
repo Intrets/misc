@@ -127,7 +127,7 @@ void Logger::log(Level l, std::string_view str, Args&&... args) {
 				std::cerr << "(error)   ";
 				this->outColoringPimpl->resetColor();
 
-				std::cout << timeString << ": ";
+				std::cerr << timeString << ": ";
 				std::cerr << std::format(str, std::forward<Args>(args)...);
 				break;
 			case Logger::Level::fatal:

@@ -16,6 +16,10 @@
 
 #include "include/misc/Logger.h"
 
+#ifdef HAS_WINDOWS_PIMPL
+#error HAS_WINDOWS_PIMPL already defined.
+#endif
+
 #if (defined(WIN32) || defined(_WIN32) || defined (_WIN64)|| defined(__WIN32__) || defined(__WINDOWS__)) && !defined(__CYGWIN__)
 #define HAS_WINDOWS_PIMPL
 #include <Windows.h>
@@ -120,3 +124,4 @@ Logger::Logger() {
 #endif
 }
 
+#undef HAS_WINDOWS_PIMPL
