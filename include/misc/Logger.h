@@ -123,17 +123,17 @@ void Logger::log(Level l, std::string_view str, Args&&... args) {
 				std::cout << std::format(str, std::forward<Args>(args)...);
 				break;
 			case Logger::Level::error:
-				this->outColoringPimpl->setColor(Color::red);
+				this->errorColoringPimpl->setColor(Color::red);
 				std::cerr << "(error)   ";
-				this->outColoringPimpl->resetColor();
+				this->errorColoringPimpl->resetColor();
 
 				std::cerr << timeString << ": ";
 				std::cerr << std::format(str, std::forward<Args>(args)...);
 				break;
 			case Logger::Level::fatal:
-				this->outColoringPimpl->setColor(Color::magenta);
+				this->errorColoringPimpl->setColor(Color::magenta);
 				std::cerr << "(fatal)   ";
-				this->outColoringPimpl->resetColor();
+				this->errorColoringPimpl->resetColor();
 
 				std::cerr << timeString << ": ";
 				std::cerr << std::format(str, std::forward<Args>(args)...);
