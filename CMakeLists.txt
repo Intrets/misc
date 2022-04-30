@@ -40,6 +40,7 @@ make_module(
 		PeriodAverage
 		CircularArray
 		Num
+		QueryPerformance
 	CXX_STANDARD 20
 	REQUIRED_LIBS
 		mem
