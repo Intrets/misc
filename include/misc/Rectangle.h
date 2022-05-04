@@ -18,7 +18,7 @@
 
 #ifdef LIB_WGLM
 
-#include <wglm/glm.hpp>
+#include <wglm/vec2.hpp>
 
 class ScreenRectangle;
 

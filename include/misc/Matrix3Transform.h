@@ -19,7 +19,7 @@
 #ifndef LIB_WGLM
 #pragma message("optional library WGLM not found but header file Matrix3Transform.h included")
 #else
-#include <wglm/glm.hpp>
+#include <wglm/mat3x3.hpp>
 
 namespace misc::mat3
 {
