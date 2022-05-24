@@ -104,7 +104,7 @@ void Logger::log(Level l, std::string_view str, Args&&... args) {
 				this->outColoringPimpl->resetColor();
 
 				std::cout << timeString << ": ";
-				std::cout << std::format(str, std::forward<Args>(args)...);
+				std::cout << std::vformat(str, std::make_format_args(args...));
 				break;
 			case Logger::Level::status:
 				this->outColoringPimpl->setColor(Color::blue);
@@ -112,7 +112,7 @@ void Logger::log(Level l, std::string_view str, Args&&... args) {
 				this->outColoringPimpl->resetColor();
 
 				std::cout << timeString << ": ";
-				std::cout << std::format(str, std::forward<Args>(args)...);
+				std::cout << std::vformat(str, std::make_format_args(args...));
 				break;
 			case Logger::Level::warning:
 				this->outColoringPimpl->setColor(Color::yellow);
@@ -120,7 +120,7 @@ void Logger::log(Level l, std::string_view str, Args&&... args) {
 				this->outColoringPimpl->resetColor();
 
 				std::cout << timeString << ": ";
-				std::cout << std::format(str, std::forward<Args>(args)...);
+				std::cout << std::vformat(str, std::make_format_args(args...));
 				break;
 			case Logger::Level::error:
 				this->errorColoringPimpl->setColor(Color::red);
@@ -128,7 +128,7 @@ void Logger::log(Level l, std::string_view str, Args&&... args) {
 				this->errorColoringPimpl->resetColor();
 
 				std::cerr << timeString << ": ";
-				std::cerr << std::format(str, std::forward<Args>(args)...);
+				std::cerr << std::vformat(str, std::make_format_args(args...));
 				break;
 			case Logger::Level::fatal:
 				this->errorColoringPimpl->setColor(Color::magenta);
@@ -136,7 +136,7 @@ void Logger::log(Level l, std::string_view str, Args&&... args) {
 				this->errorColoringPimpl->resetColor();
 
 				std::cerr << timeString << ": ";
-				std::cerr << std::format(str, std::forward<Args>(args)...);
+				std::cerr << std::vformat(str, std::make_format_args(args...));
 				break;
 			default:
 				assert(0);
