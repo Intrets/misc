@@ -28,6 +28,7 @@ make_module(
 		CircularArray
 		Num
 		QueryPerformance
+		AppData
 	CXX_STANDARD 20
 	REQUIRED_LIBS
 		mem
