@@ -29,6 +29,7 @@ make_module(
 		Num
 		QueryPerformance
 		AppData
+		Periodic
 	CXX_STANDARD 20
 	REQUIRED_LIBS
 		mem
