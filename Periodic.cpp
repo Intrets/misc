@@ -41,6 +41,10 @@ namespace misc
 		this->last = {};
 	}
 
+	void Interval::resetNow() {
+		this->last = std::chrono::steady_clock::now();
+	}
+
 	int Periods::run() {
 		this->period = (this->period + this->countRuns()) % this->periodCount;
 		assert(this->period >= 0);

@@ -26,6 +26,7 @@ namespace misc
 		bool run();
 		int64_t countRuns();
 		void reset();
+		void resetNow();
 	};
 
 	struct Periods : Interval
