@@ -13,7 +13,7 @@ namespace misc
 	{
 		struct TimePoint
 		{
-			int64_t time;
+			int64_t time{};
 
 			picoseconds timeBetween(TimePoint p2);
 
@@ -23,6 +23,10 @@ namespace misc
 
 			picoseconds toNow() const {
 				return get() - *this;
+			}
+
+			bool operator==(TimePoint other) const {
+				return this->time == other.time;
 			}
 		};
 
