@@ -33,6 +33,5 @@ make_module(
 	CXX_STANDARD 20
 	REQUIRED_LIBS
 		mem
-	OPTIONAL_LIBS
 		WGLM
 )
