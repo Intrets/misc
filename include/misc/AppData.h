@@ -1,7 +1,7 @@
 #pragma once
 
-#include <optional>
 #include <filesystem>
+#include <optional>
 
 namespace misc
 {
@@ -10,6 +10,10 @@ namespace misc
 		size_t size;
 		auto err = _dupenv_s(&buffer, &size, "AppData");
 		if (err || size == 0) {
+			return std::nullopt;
+		}
+
+		if (buffer == nullptr) {
 			return std::nullopt;
 		}
 
