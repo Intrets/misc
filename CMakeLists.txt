@@ -30,6 +30,7 @@ make_module(
 		QueryPerformance
 		AppData
 		Periodic
+		OpenUrl
 	CXX_STANDARD 20
 	REQUIRED_LIBS
 		mem
