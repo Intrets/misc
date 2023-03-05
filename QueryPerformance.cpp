@@ -5,7 +5,7 @@
 
 #include <ratio>
 
-#if (defined(WIN32) || defined(_WIN32) || defined (_WIN64)|| defined(__WIN32__) || defined(__WINDOWS__)) && !defined(__CYGWIN__)
+#if (defined(WIN32) || defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(__WINDOWS__)) && !defined(__CYGWIN__)
 
 #include <Windows.h>
 
@@ -17,6 +17,9 @@ namespace misc
 		return value.QuadPart;
 	}();
 
+#ifdef DEBUG_BUILD
+	picoseconds QueryTime::correction = picoseconds(0);
+#else
 	picoseconds QueryTime::correction = [] {
 		constexpr auto N = 100'000;
 
@@ -30,6 +33,7 @@ namespace misc
 
 		return picoseconds(total * 1'000'000'000'000 / frequency / N);
 	}();
+#endif
 
 	QueryTime::TimePoint QueryTime::get() {
 		LARGE_INTEGER value;
