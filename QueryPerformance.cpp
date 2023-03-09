@@ -41,8 +41,12 @@ namespace misc
 		return { .time = value.QuadPart };
 	}
 
-	picoseconds QueryTime::TimePoint::timeBetween(TimePoint p2) {
+	picoseconds QueryTime::TimePoint::timeBetween(TimePoint p2) const {
 		return picoseconds((p2.time - this->time) * 1'000'000'000'000i64 / frequency) - correction;
+	}
+
+	picoseconds QueryTime::Duration::toPicoSeconds() const {
+		return picoseconds(this->time * 1'000'000'000'000i64 / frequency);
 	}
 }
 #else

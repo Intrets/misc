@@ -11,18 +11,34 @@ namespace misc
 
 	struct QueryTime
 	{
+		struct Duration
+		{
+			int64_t time{};
+
+			Duration& operator+=(Duration other) {
+				this->time += other.time;
+				return *this;
+			}
+
+			int64_t count() const {
+				return this->time;
+			}
+
+			picoseconds toPicoSeconds() const;
+		};
+
 		struct TimePoint
 		{
 			int64_t time{};
 
-			picoseconds timeBetween(TimePoint p2);
+			picoseconds timeBetween(TimePoint p2) const;
 
-			picoseconds operator-(TimePoint p2) {
-				return p2.timeBetween(*this);
+			Duration toNowRaw() const {
+				return { get().time - this->time };
 			}
 
 			picoseconds toNow() const {
-				return get() - *this;
+				return this->timeBetween(get());
 			}
 
 			bool operator==(TimePoint other) const {
