@@ -31,6 +31,7 @@ make_module(
 		AppData
 		Periodic
 		OpenUrl
+		Break
 	CXX_STANDARD 20
 	REQUIRED_LIBS
 		mem
