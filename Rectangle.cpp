@@ -5,6 +5,7 @@
 
 #ifdef LIB_WGLM
 #include <wglm/gtc/constants.hpp>
+#include <wglm/common.hpp>
 
 #include "Misc.h"
 
