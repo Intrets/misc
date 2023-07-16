@@ -32,6 +32,7 @@ make_module(
 		Periodic
 		OpenUrl
 		Break
+		FilterUnique
 	CXX_STANDARD 20
 	REQUIRED_LIBS
 		mem
