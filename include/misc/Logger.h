@@ -175,4 +175,5 @@ inline void Logger2::logError(std::string_view str, Args&&... args) {
 template<class... Args>
 inline void Logger2::logFatal(std::string_view str, Args&&... args) {
 	this->log(Logger::Level::fatal, str, std::forward<Args>(args)...);
+	assert(0);
 }
