@@ -4,7 +4,8 @@
 
 namespace misc
 {
-	Interval::Interval(milliseconds_type period_) : period(period_) {
+	Interval::Interval(milliseconds_type period_)
+	    : period(period_) {
 	}
 
 	bool Interval::run() {
@@ -12,6 +13,17 @@ namespace misc
 		auto triggerTime = this->last + std::chrono::nanoseconds(static_cast<int64_t>(this->period * 1'000'000));
 		if (now > triggerTime) {
 			this->last = now;
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	bool Interval::countdown() {
+		auto now = std::chrono::steady_clock::now();
+		auto triggerTime = this->last + std::chrono::nanoseconds(static_cast<int64_t>(this->period * 1'000'000));
+		if (now < triggerTime) {
 			return true;
 		}
 		else {
@@ -57,6 +69,8 @@ namespace misc
 		this->period = -1;
 	}
 
-	Periods::Periods(milliseconds_type period, int periodCount_) : Interval(period), periodCount(periodCount_) {
+	Periods::Periods(milliseconds_type period, int periodCount_)
+	    : Interval(period),
+	      periodCount(periodCount_) {
 	}
 }

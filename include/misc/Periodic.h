@@ -24,6 +24,7 @@ namespace misc
 		~Interval() = default;
 
 		bool run();
+		bool countdown();
 		int64_t countRuns();
 		void reset();
 		void resetNow();
