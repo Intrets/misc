@@ -7,16 +7,28 @@ namespace misc
 {
 	template<class From, class To>
 	To abortConvert(From from) {
-		if (std::cmp_less(from, std::numeric_limits<To>::min())) {
-			assert(0);
-			std::abort();
-		}
-		if (std::cmp_greater(from, std::numeric_limits<To>::max())) {
+		if (!std::in_range<To>(from)) {
 			assert(0);
 			std::abort();
 		}
 
-		return To(from);
+		return static_cast<To>(from);
+	}
+
+	template<class From, class To>
+	bool checkConvert(From from, To& to) {
+		if (!std::in_range<To>(from)) {
+			return false;
+		}
+		else {
+			to = static_cast<To>(from);
+			return true;
+		}
+	}
+
+#define TRY_ASSIGN(to, from, ...) \
+	if (!misc::checkConvert(from, to)) { \
+		return __VA_ARGS__; \
 	}
 
 	template<class From, class To>

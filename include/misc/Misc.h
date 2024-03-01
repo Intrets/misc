@@ -7,14 +7,22 @@
 #include <wglm/vec2.hpp>
 #endif
 
+#include <sstream>
 #include <utility>
 #include <vector>
-#include <sstream>
 
-#define DEFAULT_COPY(T) T(const T&) = default; T& operator=(const T&) = default;
-#define NO_COPY(T) T(const T&) = delete; T& operator=(const T&) = delete;
-#define DEFAULT_MOVE(T) T(T&&) = default; T& operator=(T&&) = default;
-#define NO_MOVE(T) T(T&&) = delete; T& operator=(T&&) = delete;
+#define DEFAULT_COPY(T) \
+	T(const T&) = default; \
+	T& operator=(const T&) = default;
+#define NO_COPY(T) \
+	T(const T&) = delete; \
+	T& operator=(const T&) = delete;
+#define DEFAULT_MOVE(T) \
+	T(T&&) = default; \
+	T& operator=(T&&) = default;
+#define NO_MOVE(T) \
+	T(T&&) = delete; \
+	T& operator=(T&&) = delete;
 #define DEFAULT_COPY_MOVE(T) DEFAULT_COPY(T) DEFAULT_MOVE(T)
 #define NO_COPY_MOVE(T) NO_COPY(T) NO_MOVE(T)
 
@@ -45,6 +53,16 @@ inline std::pair<glm::ivec2, glm::ivec2> floordivmod(glm::ivec2 v, int32_t y) {
 template<class T>
 inline bool indexInVector(size_t const i, std::vector<T> const& V) {
 	return i >= 0 && i < V.size();
+}
+
+template<class T>
+inline T* index(std::integral auto i, std::vector<T>& V) {
+	if (i >= 0 && std::cmp_less(i, V.size())) {
+		return &V[i];
+	}
+	else {
+		return nullptr;
+	}
 }
 
 inline bool periodic(int32_t val, int32_t on, int32_t off, int32_t offset = 0) {

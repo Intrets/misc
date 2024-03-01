@@ -46,11 +46,11 @@ namespace misc
 		bool openFile(std::ofstream& file, RESOURCE_FILE t);
 		bool openSave(std::ifstream& file, std::string name);
 		bool openSave(std::ofstream& file, std::string name);
-		std::filesystem::path getSoundsPath();
-		std::filesystem::path getFontsPath();
-		std::filesystem::path getTexturesPath();
-		std::filesystem::path getModelsPath();
-		std::filesystem::path getShadersPath();
+		std::filesystem::path const& getSoundsPath();
+		std::filesystem::path const& getFontsPath();
+		std::filesystem::path const& getTexturesPath();
+		std::filesystem::path const& getModelsPath();
+		std::filesystem::path const& getShadersPath();
 
 		PathManager(std::string const& root);
 		~PathManager();

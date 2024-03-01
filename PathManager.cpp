@@ -28,23 +28,23 @@ namespace misc
 		return file.is_open();
 	}
 
-	std::filesystem::path PathManager::getSoundsPath() {
+	std::filesystem::path const& PathManager::getSoundsPath() {
 		return this->paths[RESOURCE_PATH::SOUNDS];
 	}
 
-	std::filesystem::path PathManager::getFontsPath() {
+	std::filesystem::path const& PathManager::getFontsPath() {
 		return this->paths[RESOURCE_PATH::FONTS];
 	}
 
-	std::filesystem::path PathManager::getTexturesPath() {
+	std::filesystem::path const& PathManager::getTexturesPath() {
 		return this->paths[RESOURCE_PATH::GRAPHICS];
 	}
 
-	std::filesystem::path PathManager::getModelsPath() {
+	std::filesystem::path const& PathManager::getModelsPath() {
 		return this->paths[RESOURCE_PATH::MODELS];
 	}
 
-	std::filesystem::path PathManager::getShadersPath() {
+	std::filesystem::path const& PathManager::getShadersPath() {
 		return this->paths[RESOURCE_PATH::SHADERS];
 	}
 
