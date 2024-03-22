@@ -34,7 +34,7 @@ make_module(
 		Break
 		FilterUnique
 		LimitChecks
-	CXX_STANDARD 20
+	CXX_STANDARD 23
 	REQUIRED_LIBS
 		mem
 	OPTIONAL_LIBS

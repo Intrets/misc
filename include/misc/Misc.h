@@ -11,6 +11,12 @@
 #include <utility>
 #include <vector>
 
+#define FORWARD_STRUCT(namespaces, name) \
+	namespace namespaces \
+	{ \
+		struct name; \
+	}
+
 #define DEFAULT_COPY(T) \
 	T(const T&) = default; \
 	T& operator=(const T&) = default;
