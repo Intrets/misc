@@ -24,7 +24,24 @@ namespace misc
 				return this->time;
 			}
 
+			Duration operator/(std::integral auto i) {
+				auto result = *this;
+				result /= i;
+				return result;
+			}
+
+			Duration& operator/=(std::integral auto i) {
+				this->time /= i;
+				return *this;
+			}
+
+			auto operator<=>(Duration const& other) const noexcept = default;
+
 			picoseconds toPicoSeconds() const;
+
+			static Duration maximum() {
+				return { std::numeric_limits<int64_t>::max() };
+			}
 		};
 
 		struct TimePoint
