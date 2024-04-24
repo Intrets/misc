@@ -1,6 +1,3 @@
-# misc - A C++ library with many bad things
-# Copyright (C) 2021 intrets
-
 cmake_minimum_required(VERSION 3.20)
 
 include("${CMAKE_SOURCE_DIR}/cmake/MakeModule.cmake")
@@ -12,14 +9,10 @@ project(${MODULE_NAME} LANGUAGES CXX)
 make_module(
 	MODULE_NAME ${MODULE_NAME}
 	MODULE_FILES
-		Matrix3Transform
 		Logger
-		Rectangle
 		Misc
 		UpdatedCache
 		StringHelpers
-		Option
-		IOWrapped
 		FunctionHelpers
 		PathManager
 		Log
@@ -37,6 +30,4 @@ make_module(
 	CXX_STANDARD 23
 	REQUIRED_LIBS
 		mem
-	OPTIONAL_LIBS
-		WGLM
 )

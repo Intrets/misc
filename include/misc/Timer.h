@@ -9,7 +9,6 @@
 #include <string>
 
 #include "PeriodAverage.h"
-#include "Option.h"
 
 namespace misc
 {
