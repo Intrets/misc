@@ -72,3 +72,17 @@ struct hashVoidPtr
 inline std::streamoff getSize(std::basic_stringstream<char>& b) {
 	return b.tellp() - b.tellg();
 }
+
+inline constexpr auto modulus(std::integral auto a, std::integral auto b) {
+	if constexpr (std::is_signed_v<std::remove_cv_t<decltype(a)>>) {
+		if (a < 0) {
+			return (b - ((-a) % b)) % b;
+		}
+		else {
+			return a % b;
+		}
+	}
+	else {
+		return a % b;
+	}
+}
