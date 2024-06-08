@@ -80,3 +80,7 @@ inline constexpr auto modulus(std::integral auto a, std::integral auto b) {
 inline int64_t isize(auto&& a) {
 	return static_cast<int64_t>(a.size());
 }
+
+constexpr inline int64_t operator""_i64(unsigned long long i) {
+	return static_cast<int64_t>(i);
+}
