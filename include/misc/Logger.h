@@ -3,14 +3,14 @@
 
 #pragma once
 
-#include <string>
 #include <mem/LazyGlobal.h>
 #include <mem/MutexedObject.h>
+#include <string>
 
-#include <iostream>
-#include <format>
 #include <cassert>
 #include <chrono>
+#include <format>
+#include <iostream>
 
 struct Logger
 {
@@ -83,14 +83,16 @@ template<class... Args>
 void Logger::log(Level l, std::string_view str, Args&&... args) {
 	auto now = std::chrono::system_clock::now();
 	auto time = std::chrono::system_clock::to_time_t(now);
-	auto epochTime = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
+	auto epochTime = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+	auto epochTimeSeconds = epochTime / 1000;
+	auto epochTimeMillis = epochTime % 1000;
 
 	std::string timeString = "";
 
 	std::tm tm;
 	std::stringstream ss;
 
-	ss << epochTime << " ";
+	ss << std::format("{}.{:04d}", epochTimeSeconds, epochTimeMillis) << " ";
 
 	if (localtime_s(&tm, &time) == 0) {
 		ss << std::put_time(&tm, "%c");
