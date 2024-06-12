@@ -3,6 +3,7 @@
 #include <cassert>
 #include <limits>
 #include <utility>
+#include <cstdlib>
 
 namespace misc
 {

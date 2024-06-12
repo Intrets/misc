@@ -70,8 +70,12 @@ namespace misc
 		return { .time = std::chrono::duration_cast<misc::picoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() };
 	}
 
-	picoseconds QueryTime::TimePoint::timeBetween(TimePoint p2) {
+	picoseconds QueryTime::TimePoint::timeBetween(TimePoint p2) const {
 		return picoseconds(p2.time - this->time) - correction;
 	}
+
+    picoseconds QueryTime::Duration::toPicoSeconds() const {
+        return picoseconds(this->time * 1'000'000'000'000ll / frequency);
+    }
 }
 #endif

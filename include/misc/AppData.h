@@ -5,6 +5,11 @@
 
 namespace misc
 {
+#ifdef ANDROID
+    inline std::optional<std::filesystem::path> getAppDataFolder(std::initializer_list<std::filesystem::path> subPaths) {
+        return std::nullopt;
+    }
+#else
 	inline std::optional<std::filesystem::path> getAppDataFolder(std::initializer_list<std::filesystem::path> subPaths) {
 		char* buffer = nullptr;
 		size_t size;
@@ -30,6 +35,7 @@ namespace misc
 
 		return path;
 	}
+#endif
 
 	inline std::optional<std::filesystem::path> getAppDataFile(std::initializer_list<std::filesystem::path> subPaths, std::filesystem::path file) {
 		if (auto path = getAppDataFolder(subPaths)) {

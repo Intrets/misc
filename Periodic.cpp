@@ -1,6 +1,7 @@
 #include "misc/Periodic.h"
 
 #include <cassert>
+#include <algorithm>
 
 namespace misc
 {

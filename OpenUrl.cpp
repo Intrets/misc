@@ -15,6 +15,8 @@ namespace misc
 		path = "xdg-open " + path;
 #endif
 
+#ifndef ANDROID
 		std::system(path.c_str());
+#endif
 	}
 }

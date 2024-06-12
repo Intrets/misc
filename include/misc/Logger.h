@@ -11,6 +11,7 @@
 #include <chrono>
 #include <format>
 #include <iostream>
+#include <sstream>
 
 struct Logger
 {
@@ -94,9 +95,11 @@ void Logger::log(Level l, std::string_view str, Args&&... args) {
 
 	ss << std::format("{}.{:04d}", epochTimeSeconds, epochTimeMillis) << " ";
 
+#ifndef ANDROID
 	if (localtime_s(&tm, &time) == 0) {
 		ss << std::put_time(&tm, "%c");
 	}
+#endif
 
 	timeString = ss.str();
 
