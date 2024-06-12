@@ -52,7 +52,9 @@ namespace misc
 #else
 namespace misc
 {
-	picoseconds QueryTime::correction = [] {
+    int64_t QueryTime::frequency = {};
+
+    picoseconds QueryTime::correction = [] {
 		constexpr auto N = 100'000;
 
 		int64_t total{ 0 };
