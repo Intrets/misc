@@ -3,6 +3,8 @@
 
 #include "QueryPerformance.h"
 
+#include <misc/Misc.h>
+
 #include <ratio>
 
 #if (defined(WIN32) || defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(__WINDOWS__)) && !defined(__CYGWIN__)
@@ -52,9 +54,9 @@ namespace misc
 #else
 namespace misc
 {
-    int64_t QueryTime::frequency = {};
+	int64_t QueryTime::frequency = {};
 
-    picoseconds QueryTime::correction = [] {
+	picoseconds QueryTime::correction = [] {
 		constexpr auto N = 100'000;
 
 		int64_t total{ 0 };
@@ -73,11 +75,11 @@ namespace misc
 	}
 
 	picoseconds QueryTime::TimePoint::timeBetween(TimePoint p2) const {
-		return picoseconds(p2.time - this->time) - correction;
+        return picoseconds(p2.time - this->time);
 	}
 
-    picoseconds QueryTime::Duration::toPicoSeconds() const {
-        return picoseconds(this->time * 1'000'000'000'000ll / frequency);
-    }
+	picoseconds QueryTime::Duration::toPicoSeconds() const {
+		return picoseconds(this->time);
+	}
 }
 #endif
