@@ -33,7 +33,7 @@ namespace misc
 
 		try {
 			std::filesystem::create_directories(path);
-		} catch (std::filesystem::filesystem_error const& e) {
+		} catch (std::filesystem::filesystem_error const&) {
 			return std::nullopt;
 		}
 
