@@ -7,7 +7,7 @@
 #error HAS_WINDOWS_PIMPL already defined.
 #endif
 
-#if (defined(WIN32) || defined(_WIN32) || defined (_WIN64)|| defined(__WIN32__) || defined(__WINDOWS__)) && !defined(__CYGWIN__)
+#if (defined(WIN32) || defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(__WINDOWS__)) && !defined(__CYGWIN__)
 #define HAS_WINDOWS_PIMPL
 #include <Windows.h>
 #endif
@@ -15,9 +15,31 @@
 #ifdef HAS_WINDOWS_PIMPL
 struct WindowsPimpl : Logger::ColorPimpl
 {
+	std::mutex mutex{};
+
 	HANDLE handle;
+	std::ostream& stream;
 
 	std::optional<WORD> attributes;
+
+	Logger::ColorPimpl& write(std::string_view text) override {
+		this->stream << text;
+		return *this;
+	}
+
+	void start() override {
+		this->mutex.lock();
+
+		stream.flush();
+
+	}
+
+	void end() override {
+		stream << "\n";
+		stream.flush();
+
+		this->mutex.unlock();
+	}
 
 	void setColor(Logger::Color color) override {
 		if (!this->attributes.has_value()) {
@@ -57,7 +79,8 @@ struct WindowsPimpl : Logger::ColorPimpl
 		}
 	}
 
-	WindowsPimpl(DWORD type) {
+	WindowsPimpl(DWORD type, std::ostream& stream_)
+	    : stream(stream_) {
 		this->handle = GetStdHandle(type);
 	}
 
@@ -96,18 +119,19 @@ struct ANSIPimpl : Logger::ColorPimpl
 		this->stream << "\033[0m";
 	}
 
-	ANSIPimpl(std::ostream& stream_) : stream(stream_) {
+	ANSIPimpl(std::ostream& stream_)
+	    : stream(stream_) {
 	}
 	~ANSIPimpl() = default;
 };
 
 Logger::Logger() {
 #ifdef HAS_WINDOWS_PIMPL
-	this->outColoringPimpl = std::make_unique<WindowsPimpl>(STD_OUTPUT_HANDLE);
-	this->errorColoringPimpl = std::make_unique<WindowsPimpl>(STD_ERROR_HANDLE);
+	this->out = std::make_unique<WindowsPimpl>(STD_OUTPUT_HANDLE, std::cout);
+	this->error = std::make_unique<WindowsPimpl>(STD_ERROR_HANDLE, std::cerr);
 #else
-	this->outColoringPimpl = std::make_unique<ANSIPimpl>(std::cout);
-	this->errorColoringPimpl = std::make_unique<ANSIPimpl>(std::cerr);
+	this->out = std::make_unique<ANSIPimpl>(std::cout);
+	this->error = std::make_unique<ANSIPimpl>(std::cerr);
 #endif
 }
 
