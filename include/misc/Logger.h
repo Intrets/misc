@@ -2,13 +2,14 @@
 
 #include <mem/LazyGlobal.h>
 #include <mem/MutexedObject.h>
-#include <string>
 
 #include <cassert>
 #include <chrono>
 #include <format>
 #include <iostream>
+#include <shared_mutex>
 #include <sstream>
+#include <string>
 
 #include <tepp/temp_format.h>
 
@@ -27,6 +28,8 @@ struct Logger
 		fatal
 	};
 
+	using log_function = std::function<void(Logger::Level, te::cstring_view)>;
+
 	enum class Color
 	{
 		red,
@@ -36,15 +39,20 @@ struct Logger
 		blue,
 	};
 
-	struct ColorPimpl
+	struct Writer
 	{
-		virtual void start() {
-		}
-		virtual void end() {
-		}
-		virtual ColorPimpl& write(std::string_view text) = 0;
+		virtual Writer& write(std::string_view text) = 0;
+
 		virtual void setColor(Color color) = 0;
 		virtual void resetColor() = 0;
+
+		Writer() = default;
+		virtual ~Writer() = default;
+	};
+
+	struct ColorPimpl
+	{
+		virtual std::unique_ptr<Writer> newWriter(Logger::Level level) = 0;
 
 		ColorPimpl() = default;
 		virtual ~ColorPimpl() = default;
@@ -83,60 +91,58 @@ public:
 
 		switch (l) {
 			case Logger::Level::info:
-				this->out->start();
+			{
+				auto writer = this->out->newWriter(l);
 
-				this->out->setColor(Color::green);
-				this->out->write("(info)    ");
-				this->out->resetColor();
+				writer->setColor(Color::green);
+				writer->write("(info)    ");
+				writer->resetColor();
 
-				this->out->write(timeString).write(": ").write(message);
-
-				this->out->end();
-				break;
+				writer->write(timeString).write(": ").write(message);
+			} break;
 			case Logger::Level::status:
-				this->out->start();
+			{
+				auto writer = this->out->newWriter(l);
 
-				this->out->setColor(Color::blue);
-				this->out->write("(status)  ");
-				this->out->resetColor();
+				writer->setColor(Color::blue);
+				writer->write("(status)  ");
+				writer->resetColor();
 
-				this->out->write(timeString).write(": ").write(message);
+				writer->write(timeString).write(": ").write(message);
 
-				this->out->end();
-				break;
+			} break;
 			case Logger::Level::warning:
-				this->out->start();
+			{
+				auto writer = this->out->newWriter(l);
 
-				this->out->setColor(Color::yellow);
-				this->out->write("(warning) ");
-				this->out->resetColor();
+				writer->setColor(Color::yellow);
+				writer->write("(warning) ");
+				writer->resetColor();
 
-				this->out->write(timeString).write(": ").write(message);
-
-				this->out->end();
-				break;
+				writer->write(timeString).write(": ").write(message);
+			} break;
 			case Logger::Level::error:
-				this->error->start();
+			{
+				auto writer = this->error->newWriter(l);
 
-				this->error->setColor(Color::red);
-				this->error->write("(error)   ");
-				this->error->resetColor();
+				writer->setColor(Color::red);
+				writer->write("(error)   ");
+				writer->resetColor();
 
-				this->error->write(timeString).write(": ").write(message);
+				writer->write(timeString).write(": ").write(message);
 
-				this->error->end();
-				break;
+			} break;
 			case Logger::Level::fatal:
-				this->error->start();
+			{
+				auto writer = this->error->newWriter(l);
 
-				this->error->setColor(Color::magenta);
-				this->error->write("(fatal)   ");
-				this->error->resetColor();
+				writer->setColor(Color::magenta);
+				writer->write("(fatal)   ");
+				writer->resetColor();
 
-				this->error->write(timeString).write(": ").write(message);
+				writer->write(timeString).write(": ").write(message);
 
-				this->error->end();
-				break;
+			} break;
 			default:
 				assert(0);
 				break;
@@ -151,7 +157,10 @@ struct Logger2
 {
 	std::atomic<Logger::Level> level = Logger::Level::fatal;
 
-	Logger logger;
+	std::shared_mutex mutex{};
+	Logger logger{};
+
+	void setLogFunctions(bool doColors, Logger::log_function out, Logger::log_function error);
 };
 
 constexpr auto logger = LazyGlobal<Logger2>;
@@ -159,6 +168,7 @@ constexpr auto logger = LazyGlobal<Logger2>;
 #define LOGTYPE(type, ...) \
 	do { \
 		if (logger->level.load(std::memory_order_relaxed) >= Logger::Level::type) { \
+			std::shared_lock lock(logger->mutex); \
 			logger->logger.log2(Logger::Level::type, __VA_ARGS__); \
 		} \
 	} while (0)

@@ -13,6 +13,8 @@
 #endif
 
 #ifdef HAS_WINDOWS_PIMPL
+struct WindowsWriter;
+
 struct WindowsPimpl : Logger::ColorPimpl
 {
 	std::mutex mutex{};
@@ -22,30 +24,30 @@ struct WindowsPimpl : Logger::ColorPimpl
 
 	std::optional<WORD> attributes;
 
-	Logger::ColorPimpl& write(std::string_view text) override {
-		this->stream << text;
+	WindowsPimpl(DWORD type, std::ostream& stream_)
+	    : stream(stream_) {
+		this->handle = GetStdHandle(type);
+	}
+
+	~WindowsPimpl() = default;
+
+	std::unique_ptr<Logger::Writer> newWriter(Logger::Level level) override;
+};
+
+struct WindowsWriter : Logger::Writer
+{
+	WindowsPimpl& windowsPimpl;
+
+	Writer& write(std::string_view text) override {
+		this->windowsPimpl.stream << text;
 		return *this;
 	}
 
-	void start() override {
-		this->mutex.lock();
-
-		stream.flush();
-
-	}
-
-	void end() override {
-		stream << "\n";
-		stream.flush();
-
-		this->mutex.unlock();
-	}
-
 	void setColor(Logger::Color color) override {
-		if (!this->attributes.has_value()) {
+		if (!this->windowsPimpl.attributes.has_value()) {
 			CONSOLE_SCREEN_BUFFER_INFO info;
-			GetConsoleScreenBufferInfo(this->handle, &info);
-			this->attributes = info.wAttributes;
+			GetConsoleScreenBufferInfo(this->windowsPimpl.handle, &info);
+			this->windowsPimpl.attributes = info.wAttributes;
 		}
 
 		WORD c = 0;
@@ -69,45 +71,86 @@ struct WindowsPimpl : Logger::ColorPimpl
 				assert(0);
 				break;
 		}
-		SetConsoleTextAttribute(this->handle, c);
+
+		SetConsoleTextAttribute(this->windowsPimpl.handle, c);
 	}
 
 	void resetColor() override {
-		if (this->attributes.has_value()) {
-			SetConsoleTextAttribute(this->handle, this->attributes.value());
-			this->attributes = std::nullopt;
+		if (this->windowsPimpl.attributes.has_value()) {
+			SetConsoleTextAttribute(this->windowsPimpl.handle, this->windowsPimpl.attributes.value());
+			this->windowsPimpl.attributes = std::nullopt;
 		}
 	}
 
-	WindowsPimpl(DWORD type, std::ostream& stream_)
-	    : stream(stream_) {
-		this->handle = GetStdHandle(type);
-	}
+	NO_COPY(WindowsWriter);
+	DEFAULT_MOVE(WindowsWriter);
 
-	~WindowsPimpl() = default;
+	WindowsWriter(WindowsPimpl& windowsPimpl_)
+	    : windowsPimpl(windowsPimpl_) {
+		this->windowsPimpl.mutex.lock();
+	}
+	WindowsWriter() = delete;
+	virtual ~WindowsWriter() {
+		this->write("\n");
+		this->windowsPimpl.stream.flush();
+		this->windowsPimpl.mutex.unlock();
+	}
 };
+
+std::unique_ptr<Logger::Writer> WindowsPimpl::newWriter(Logger::Level level) {
+	return std::make_unique<WindowsWriter>(*this);
+}
 #endif
 
 struct ANSIPimpl : Logger::ColorPimpl
 {
-	std::ostream& stream;
+	Logger::log_function out{};
+	bool doColors = true;
+
+	ANSIPimpl(Logger::log_function out_)
+	    : out(std::move(out_)) {
+	}
+	ANSIPimpl(std::ostream& stream_) {
+		this->out = [stream = &stream_](Logger::Level level, te::cstring_view str) {
+			stream->write(str.getData(), str.string_view().size());
+		};
+	}
+	~ANSIPimpl() = default;
+
+	std::unique_ptr<Logger::Writer> newWriter(Logger::Level level) override;
+};
+
+struct ANSIWriter : Logger::Writer
+{
+	ANSIPimpl& ansi;
+	Logger::Level level;
+	te::temp_format_buffer::BufferAccess bufferAccess;
+
+	Writer& write(std::string_view text) override {
+		this->bufferAccess.append(text);
+		return *this;
+	}
 
 	void setColor(Logger::Color color) override {
+		if (!this->ansi.doColors) {
+			return;
+		}
+
 		switch (color) {
 			case Logger::Color::red:
-				this->stream << "\033[31m";
+				this->write("\033[31m");
 				break;
 			case Logger::Color::yellow:
-				this->stream << "\033[33m";
+				this->write("\033[33m");
 				break;
 			case Logger::Color::green:
-				this->stream << "\033[32m";
+				this->write("\033[32m");
 				break;
 			case Logger::Color::magenta:
-				this->stream << "\033[35m";
+				this->write("\033[35m");
 				break;
 			case Logger::Color::blue:
-				this->stream << "\033[36m";
+				this->write("\033[36m");
 				break;
 			default:
 				assert(0);
@@ -116,14 +159,44 @@ struct ANSIPimpl : Logger::ColorPimpl
 	}
 
 	void resetColor() override {
-		this->stream << "\033[0m";
+		if (!this->ansi.doColors) {
+			return;
+		}
+
+		this->write("\033[0m");
 	}
 
-	ANSIPimpl(std::ostream& stream_)
-	    : stream(stream_) {
+	ANSIWriter(Logger::Level level_, ANSIPimpl& ansi_, te::temp_format_buffer::BufferAccess&& bufferAccess_)
+	    : ansi(ansi_),
+	      level(level_),
+	      bufferAccess(std::move(bufferAccess_)) {
 	}
-	~ANSIPimpl() = default;
+
+	NO_COPY(ANSIWriter);
+	DEFAULT_MOVE(ANSIWriter);
+
+	ANSIWriter() = delete;
+	~ANSIWriter() {
+		this->bufferAccess.append("\n");
+		this->bufferAccess.append("\n");
+		this->ansi.out(this->level, this->bufferAccess.sv());
+	}
 };
+
+std::unique_ptr<Logger::Writer> ANSIPimpl::newWriter(Logger::Level level) {
+	return std::make_unique<ANSIWriter>(level, *this, te::temp_format_buffer::getBuffer());
+}
+void Logger2::setLogFunctions(bool doColors, Logger::log_function out, Logger::log_function error) {
+	std::unique_lock lock(this->mutex);
+
+	auto outPimpl = std::make_unique<ANSIPimpl>(std::move(out));
+	outPimpl->doColors = doColors;
+	this->logger.out = std::move(outPimpl);
+
+	auto errorPimpl = std::make_unique<ANSIPimpl>(std::move(error));
+	errorPimpl->doColors = doColors;
+	this->logger.error = std::move(errorPimpl);
+}
 
 Logger::Logger() {
 #ifdef HAS_WINDOWS_PIMPL
