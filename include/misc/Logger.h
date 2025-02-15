@@ -11,6 +11,7 @@
 #include <sstream>
 #include <string>
 
+#include <tepp/enum_array.h>
 #include <tepp/temp_format.h>
 
 struct LoggerOutputInterface
@@ -21,12 +22,24 @@ struct Logger
 {
 	enum class Level
 	{
+		none,
 		info,
 		status,
 		warning,
 		error,
 		fatal,
 		input,
+		MAX
+	};
+
+	static constexpr te::enum_array<Level, te::cstring_view> levelNames{
+		{ Level::none, "None" },
+		{ Level::info, "Info" },
+		{ Level::status, "Status" },
+		{ Level::warning, "Warning" },
+		{ Level::error, "Error" },
+		{ Level::fatal, "Fatal" },
+		{ Level::input, "Input" },
 	};
 
 	using log_function = std::function<void(Logger::Level, te::cstring_view)>;
@@ -166,7 +179,7 @@ public:
 
 struct Logger2
 {
-	std::atomic<Logger::Level> level = Logger::Level::fatal;
+	std::atomic<Logger::Level> level = Logger::Level::input;
 
 	std::shared_mutex mutex{};
 	Logger logger{};
@@ -187,7 +200,9 @@ constexpr auto logger = LazyGlobal<Logger2>;
 #ifdef DEBUG_BUILD
 #define LOGINPUT(...) LOGTYPE(input, __VA_ARGS__)
 #else
-#define LOGINPUT(...) do {} while (0)
+#define LOGINPUT(...) \
+	do { \
+	} while (0)
 #endif
 
 #define LOGINFO(...) LOGTYPE(info, __VA_ARGS__)
