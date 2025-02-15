@@ -25,7 +25,8 @@ struct Logger
 		status,
 		warning,
 		error,
-		fatal
+		fatal,
+		input,
 	};
 
 	using log_function = std::function<void(Logger::Level, te::cstring_view)>;
@@ -90,6 +91,16 @@ public:
 		auto message = te::temp_format(fmt, std::forward<Args>(args)...);
 
 		switch (l) {
+			case Logger::Level::input:
+			{
+				auto writer = this->out->newWriter(l);
+
+				writer->setColor(Color::green);
+				writer->write("(input)   ");
+				writer->resetColor();
+
+				writer->write(timeString).write(": ").write(message);
+			} break;
 			case Logger::Level::info:
 			{
 				auto writer = this->out->newWriter(l);
@@ -172,6 +183,12 @@ constexpr auto logger = LazyGlobal<Logger2>;
 			logger->logger.log2(Logger::Level::type, __VA_ARGS__); \
 		} \
 	} while (0)
+
+#ifdef DEBUG_BUILD
+#define LOGINPUT(...) LOGTYPE(input, __VA_ARGS__)
+#else
+#define LOGINPUT(...) do {} while (0)
+#endif
 
 #define LOGINFO(...) LOGTYPE(info, __VA_ARGS__)
 #define LOGSTATUS(...) LOGTYPE(status, __VA_ARGS__)
