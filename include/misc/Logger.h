@@ -22,24 +22,24 @@ struct Logger
 {
 	enum class Level
 	{
-		none,
+		input,
 		info,
 		status,
 		warning,
 		error,
 		fatal,
-		input,
+		none,
 		MAX
 	};
 
 	static constexpr te::enum_array<Level, te::cstring_view> levelNames{
-		{ Level::none, "None" },
+		{ Level::input, "Input" },
 		{ Level::info, "Info" },
 		{ Level::status, "Status" },
 		{ Level::warning, "Warning" },
 		{ Level::error, "Error" },
 		{ Level::fatal, "Fatal" },
-		{ Level::input, "Input" },
+		{ Level::none, "None" },
 	};
 
 	using log_function = std::function<void(Logger::Level, te::cstring_view)>;
@@ -179,7 +179,7 @@ public:
 
 struct Logger2
 {
-	std::atomic<Logger::Level> level = Logger::Level::input;
+	std::atomic<Logger::Level> level = Logger::Level::info;
 
 	std::shared_mutex mutex{};
 	Logger logger{};
@@ -191,7 +191,7 @@ constexpr auto logger = LazyGlobal<Logger2>;
 
 #define LOGTYPE(type, ...) \
 	do { \
-		if (logger->level.load(std::memory_order_relaxed) >= Logger::Level::type) { \
+		if (logger->level.load(std::memory_order_relaxed) <= Logger::Level::type) { \
 			std::shared_lock lock(logger->mutex); \
 			logger->logger.log2(Logger::Level::type, __VA_ARGS__); \
 		} \
