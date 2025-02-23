@@ -10,6 +10,6 @@
 #include <cassert>
 #define breakpoint() \
 	do { \
-		assert(0); \
+		tassert(0); \
 	} while (0)
 #endif

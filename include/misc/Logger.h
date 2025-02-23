@@ -3,7 +3,6 @@
 #include <mem/LazyGlobal.h>
 #include <mem/MutexedObject.h>
 
-#include <cassert>
 #include <chrono>
 #include <format>
 #include <iostream>
@@ -168,7 +167,7 @@ public:
 
 			} break;
 			default:
-				assert(0);
+				tassert(0);
 				break;
 		}
 	}

@@ -1,16 +1,17 @@
 #pragma once
 
-#include <cassert>
 #include <limits>
 #include <utility>
 #include <cstdlib>
+
+#include <tepp/assert.h>
 
 namespace misc
 {
 	template<class From, class To>
 	To abortConvert(From from) {
 		if (!std::in_range<To>(from)) {
-			assert(0);
+			tassert(0);
 			std::abort();
 		}
 

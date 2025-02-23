@@ -68,7 +68,7 @@ struct WindowsWriter : Logger::Writer
 				c = FOREGROUND_BLUE | FOREGROUND_INTENSITY;
 				break;
 			default:
-				assert(0);
+				tassert(0);
 				break;
 		}
 
@@ -153,7 +153,7 @@ struct ANSIWriter : Logger::Writer
 				this->write("\033[36m");
 				break;
 			default:
-				assert(0);
+				tassert(0);
 				break;
 		}
 	}

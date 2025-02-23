@@ -1,7 +1,8 @@
 #include "misc/Periodic.h"
 
-#include <cassert>
 #include <algorithm>
+
+#include <tepp/assert.h>
 
 namespace misc
 {
@@ -60,7 +61,7 @@ namespace misc
 
 	int Periods::run() {
 		this->period = (this->period + this->countRuns()) % this->periodCount;
-		assert(this->period >= 0);
+		tassert(this->period >= 0);
 
 		return this->period;
 	}
