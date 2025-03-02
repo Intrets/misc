@@ -20,6 +20,10 @@ namespace misc
 				return *this;
 			}
 
+			Duration operator+(Duration other) {
+				return { this->time + other.time };
+			}
+
 			int64_t count() const {
 				return this->time;
 			}
