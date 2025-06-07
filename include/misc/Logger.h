@@ -10,6 +10,7 @@
 #include <sstream>
 #include <string>
 
+#include <tepp/cstring_view.h>
 #include <tepp/enum_array.h>
 #include <tepp/temp_format.h>
 
