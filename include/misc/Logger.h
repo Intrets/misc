@@ -5,6 +5,7 @@
 
 #include <chrono>
 #include <format>
+#include <functional>
 #include <iostream>
 #include <shared_mutex>
 #include <sstream>
