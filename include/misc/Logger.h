@@ -3,6 +3,7 @@
 #include <mem/LazyGlobal.h>
 #include <mem/MutexedObject.h>
 
+#include <time.h>
 #include <chrono>
 #include <format>
 #include <functional>
@@ -90,15 +91,13 @@ public:
 
 		std::string timeString = "";
 
-		std::tm tm;
+		std::tm tm = *std::localtime(&time);
 		std::stringstream ss;
 
 		ss << std::format("{}.{:04d}", epochTimeSeconds, epochTimeMillis) << " ";
 
 #ifndef ANDROID
-		if (localtime_s(&tm, &time) == 0) {
-			ss << std::put_time(&tm, "%c");
-		}
+		ss << std::put_time(&tm, "%c");
 #endif
 
 		timeString = ss.str();

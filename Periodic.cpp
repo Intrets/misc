@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include <tepp/assert.h>
+#include <tepp/integers.h>
 
 namespace misc
 {
@@ -44,7 +45,7 @@ namespace misc
 		auto p = std::chrono::nanoseconds(static_cast<int64_t>(this->period * 1'000'000));
 
 		auto diff = now - this->last;
-		auto count = std::max((long long)0, diff / p);
+		auto count = std::max(0_i, diff / p);
 
 		this->last += count * p;
 
