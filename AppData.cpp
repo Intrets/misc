@@ -1,8 +1,10 @@
 #include "misc/AppData.h"
 
+#include <cstdlib>
 #include <mem/LazyGlobal.h>
 #include <mem/MutexedObject.h>
 
+#include <optional>
 #include <tepp/try_catch.h>
 
 namespace misc
@@ -71,7 +73,15 @@ namespace misc
 
 				return path;
 #else
-				return std::nullopt;
+				auto home = std::getenv("HOME");
+				if (home == nullptr) {
+					return std::nullopt;
+				}
+
+				auto path = std::filesystem::path(home) / std::filesystem::path("MackSynth");
+				std::filesystem::create_directories(path);
+
+				return path;
 #endif
 			}
 		} catch (std::filesystem::filesystem_error const&) {
