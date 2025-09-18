@@ -1,7 +1,7 @@
 // misc - A C++ library with many bad things
 // Copyright (C) 2022 intrets
 
-#include "include/misc/Logger.h"
+#include "misc/Logger.h"
 
 #ifdef HAS_WINDOWS_PIMPL
 #error HAS_WINDOWS_PIMPL already defined.
