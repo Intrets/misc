@@ -78,7 +78,10 @@ namespace misc
 					return std::nullopt;
 				}
 
-				auto path = std::filesystem::path(home) / std::filesystem::path("MackSynth");
+				auto path = std::filesystem::path(home);
+				for (auto& subPath : subPaths) {
+					path /= subPath;
+				}
 				std::filesystem::create_directories(path);
 
 				return path;
