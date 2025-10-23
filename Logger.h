@@ -3,7 +3,6 @@
 #include <mem/LazyGlobal.h>
 #include <mem/MutexedObject.h>
 
-#include <time.h>
 #include <chrono>
 #include <format>
 #include <functional>
@@ -11,6 +10,7 @@
 #include <shared_mutex>
 #include <sstream>
 #include <string>
+#include <time.h>
 
 #include <tepp/cstring_view.h>
 #include <tepp/enum_array.h>
@@ -74,8 +74,8 @@ struct Logger
 		virtual ~ColorPimpl() = default;
 	};
 
-	std::unique_ptr<ColorPimpl> out;
-	std::unique_ptr<ColorPimpl> error;
+	std::vector<std::unique_ptr<ColorPimpl>> out;
+	std::vector<std::unique_ptr<ColorPimpl>> error;
 
 public:
 	template<class... Args>
@@ -105,68 +105,71 @@ public:
 
 		switch (l) {
 			case Logger::Level::input:
-			{
-				auto writer = this->out->newWriter(l);
+				for (auto& e : this->out) {
+					auto writer = e->newWriter(l);
 
-				writer->setColor(Color::green);
-				writer->write("(input)   ");
-				writer->resetColor();
+					writer->setColor(Color::green);
+					writer->write("(input)   ");
+					writer->resetColor();
 
-				writer->write(timeString).write(": ").write(message);
-			} break;
+					writer->write(timeString).write(": ").write(message);
+				}
+				break;
 			case Logger::Level::info:
-			{
-				auto writer = this->out->newWriter(l);
+				for (auto& e : this->out) {
+					auto writer = e->newWriter(l);
 
-				writer->setColor(Color::green);
-				writer->write("(info)    ");
-				writer->resetColor();
+					writer->setColor(Color::green);
+					writer->write("(info)    ");
+					writer->resetColor();
 
-				writer->write(timeString).write(": ").write(message);
-			} break;
+					writer->write(timeString).write(": ").write(message);
+				}
+				break;
 			case Logger::Level::status:
-			{
-				auto writer = this->out->newWriter(l);
+				for (auto& e : this->out) {
+					auto writer = e->newWriter(l);
 
-				writer->setColor(Color::blue);
-				writer->write("(status)  ");
-				writer->resetColor();
+					writer->setColor(Color::blue);
+					writer->write("(status)  ");
+					writer->resetColor();
 
-				writer->write(timeString).write(": ").write(message);
-
-			} break;
+					writer->write(timeString).write(": ").write(message);
+				}
+				break;
 			case Logger::Level::warning:
-			{
-				auto writer = this->out->newWriter(l);
+				for (auto& e : this->out) {
+					auto writer = e->newWriter(l);
 
-				writer->setColor(Color::yellow);
-				writer->write("(warning) ");
-				writer->resetColor();
+					writer->setColor(Color::yellow);
+					writer->write("(warning) ");
+					writer->resetColor();
 
-				writer->write(timeString).write(": ").write(message);
-			} break;
+					writer->write(timeString).write(": ").write(message);
+				}
+				break;
 			case Logger::Level::error:
-			{
-				auto writer = this->error->newWriter(l);
+				for (auto& e : this->error) {
+					auto writer = e->newWriter(l);
 
-				writer->setColor(Color::red);
-				writer->write("(error)   ");
-				writer->resetColor();
+					writer->setColor(Color::red);
+					writer->write("(error)   ");
+					writer->resetColor();
 
-				writer->write(timeString).write(": ").write(message);
-
-			} break;
+					writer->write(timeString).write(": ").write(message);
+				}
+				break;
 			case Logger::Level::fatal:
-			{
-				auto writer = this->error->newWriter(l);
+				for (auto& e : this->error) {
+					auto writer = e->newWriter(l);
 
-				writer->setColor(Color::magenta);
-				writer->write("(fatal)   ");
-				writer->resetColor();
+					writer->setColor(Color::magenta);
+					writer->write("(fatal)   ");
+					writer->resetColor();
 
-				writer->write(timeString).write(": ").write(message);
-
-			} break;
+					writer->write(timeString).write(": ").write(message);
+				}
+				break;
 			default:
 				tassert(0);
 				break;

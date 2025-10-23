@@ -191,20 +191,20 @@ void Logger2::setLogFunctions(bool doColors, Logger::log_function out, Logger::l
 
 	auto outPimpl = std::make_unique<ANSIPimpl>(std::move(out));
 	outPimpl->doColors = doColors;
-	this->logger.out = std::move(outPimpl);
+	this->logger.out.push_back(std::move(outPimpl));
 
 	auto errorPimpl = std::make_unique<ANSIPimpl>(std::move(error));
 	errorPimpl->doColors = doColors;
-	this->logger.error = std::move(errorPimpl);
+	this->logger.error.push_back(std::move(errorPimpl));
 }
 
 Logger::Logger() {
 #ifdef HAS_WINDOWS_PIMPL
-	this->out = std::make_unique<WindowsPimpl>(STD_OUTPUT_HANDLE, std::cout);
-	this->error = std::make_unique<WindowsPimpl>(STD_ERROR_HANDLE, std::cerr);
+	this->out.push_back(std::make_unique<WindowsPimpl>(STD_OUTPUT_HANDLE, std::cout));
+	this->error.push_back(std::make_unique<WindowsPimpl>(STD_ERROR_HANDLE, std::cerr));
 #else
-	this->out = std::make_unique<ANSIPimpl>(std::cout);
-	this->error = std::make_unique<ANSIPimpl>(std::cerr);
+	this->out.push_back(std::make_unique<ANSIPimpl>(std::cout));
+	this->error.push_back(std::make_unique<ANSIPimpl>(std::cerr));
 #endif
 }
 
