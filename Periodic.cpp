@@ -45,7 +45,7 @@ namespace misc
 		auto p = std::chrono::nanoseconds(static_cast<int64_t>(this->period * 1'000'000));
 
 		auto diff = now - this->last;
-		auto count = std::max(0_i, diff / p);
+		auto count = std::max(decltype(diff / p)(0), diff / p);
 
 		this->last += count * p;
 
