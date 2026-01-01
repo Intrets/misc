@@ -3,11 +3,12 @@
 
 #pragma once
 
+#include <cstdint>
 #include <vector>
 
 namespace misc
 {
-	template <class T>
+	template<class T>
 	class CircularArray
 	{
 	private:
@@ -46,7 +47,8 @@ namespace misc
 	}
 
 	template<class T>
-	inline CircularArray<T>::CircularArray(int32_t size) : CircularArray(this->zero(), size) {
+	inline CircularArray<T>::CircularArray(int32_t size)
+	    : CircularArray(this->zero(), size) {
 	}
 
 	template<class T>
